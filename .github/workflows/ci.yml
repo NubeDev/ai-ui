@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  rust:
+    name: Rust (fmt, clippy, test, feature matrix, R2/R6 guards)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      # 1. Formatting.
+      - name: cargo fmt --check
+        run: cargo fmt --all -- --check
+
+      # 2. Lints — deny warnings.
+      - name: cargo clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      # 3. Tests.
+      - name: cargo test
+        run: cargo test --workspace
+
+      # 4. R2 — default-features on ai-ui-core must NOT pull a model client
+      # or HTTP transport into the dep graph.
+      - name: R2 guard — ai-ui-core default deps are BYO-AI
+        run: |
+          set -euo pipefail
+          tree="$(cargo tree -p ai-ui-core --no-default-features --prefix none --edges normal)"
+          echo "$tree"
+          forbidden='reqwest|claude-wrapper|axum|tower-http|hyper'
+          if echo "$tree" | grep -E "^($forbidden)( |$)" ; then
+            echo "::error::R2 violation: ai-ui-core default deps include a forbidden crate above."
+            exit 1
+          fi
+
+      # 5. R6 — ai-ui-core's manifest must not declare HTTP server deps.
+      - name: R6 guard — ai-ui-core manifest has no HTTP server deps
+        run: |
+          set -euo pipefail
+          if grep -E '^(axum|tower|tower-http|http) =' crates/ai-ui-core/Cargo.toml ; then
+            echo "::error::R6 violation: ai-ui-core/Cargo.toml declares an HTTP dep above."
+            exit 1
+          fi
+
+      # 6. Feature matrix — every combo must compile.
+      - name: cargo check (no default features)
+        run: cargo check -p ai-ui-core --no-default-features
+      - name: cargo check (openai-proxy)
+        run: cargo check -p ai-ui-core --no-default-features --features openai-proxy
+      - name: cargo check (claude-cli)
+        run: cargo check -p ai-ui-core --no-default-features --features claude-cli
+      - name: cargo check (openai-proxy + claude-cli)
+        run: cargo check -p ai-ui-core --no-default-features --features 'openai-proxy claude-cli'
