@@ -5,7 +5,7 @@
 //! This is the cross-language contract: if the React side regenerates
 //! `components.json` and breaks the shape, this test catches it.
 
-use ai_ui_prompt::{PromptBuilder, load_manifest};
+use ai_ui_prompt::{load_manifest, PromptBuilder};
 use ai_ui_skills::SkillRegistry;
 
 fn shadcn_manifest_path() -> std::path::PathBuf {
@@ -32,8 +32,16 @@ fn loads_shadcn_manifest_and_renders_every_component() {
 
     // Every Stage-5 core component must be present.
     let expected = [
-        "Page", "Card", "KpiTile", "DataTable", "LineChart", "BarChart", "Form", "Input",
-        "Select", "Button",
+        "Page",
+        "Card",
+        "KpiTile",
+        "DataTable",
+        "LineChart",
+        "BarChart",
+        "Form",
+        "Input",
+        "Select",
+        "Button",
     ];
     for name in expected {
         assert!(
@@ -57,7 +65,7 @@ fn loads_shadcn_manifest_and_renders_every_component() {
 #[test]
 fn shadcn_manifest_works_with_repo_skills() {
     let manifest =
-        load_manifest(&shadcn_manifest_path()).expect("shadcn components.json should load");
+        load_manifest(shadcn_manifest_path()).expect("shadcn components.json should load");
     let skills_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("..")
         .join("..")
