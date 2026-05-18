@@ -1,0 +1,14 @@
+[package]
+name = "ai-ui-skills"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Skill loader for ai-ui: parses .md files with YAML frontmatter."
+
+[dependencies]
+ai-ui-types = { workspace = true }
+serde = { workspace = true }
+serde_yaml = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }

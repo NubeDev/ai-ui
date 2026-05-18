@@ -1,3 +1,17 @@
+# Rust
+target/
+Cargo.lock.bak
+
+# Generated artifacts (consumer side). Examples track their own for convenience;
+# the `!examples/` exception below keeps them checked in. The shadcn package
+# ships its pre-generated components.json in dist/ so consumers can use it
+# without running the generator.
+**/generated/system-prompt.txt
+**/generated/components.json
+!examples/**/generated/system-prompt.txt
+!examples/**/generated/components.json
+!packages/ai-ui-react-shadcn/dist/components.json
+
 # Logs
 logs
 *.log

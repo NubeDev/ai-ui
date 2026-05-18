@@ -1,0 +1,48 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/ai-ui-types",
+    "crates/ai-ui-skills",
+    "crates/ai-ui-prompt",
+    "crates/ai-ui-core",
+    "crates/ai-ui-axum",
+    "examples/stock-openui-server",
+    "examples/shadcn-dashboard",
+    "examples/library-only",
+    "examples/e2e-mock",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/NubeDev/ai-ui"
+rust-version = "1.78"
+
+[workspace.dependencies]
+ai-ui-types = { path = "crates/ai-ui-types", version = "0.1.0" }
+ai-ui-skills = { path = "crates/ai-ui-skills", version = "0.1.0" }
+ai-ui-prompt = { path = "crates/ai-ui-prompt", version = "0.1.0" }
+ai-ui-core   = { path = "crates/ai-ui-core",   version = "0.1.0" }
+ai-ui-axum   = { path = "crates/ai-ui-axum",   version = "0.1.0" }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+thiserror = "1"
+tracing = "0.1"
+
+# server-only — never depended on by ai-ui-types
+axum = { version = "0.8", features = ["macros"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "io-util"] }
+tokio-stream = { version = "0.1", features = ["sync"] }
+tower-http = { version = "0.6", features = ["cors", "fs"] }
+futures = "0.3"
+bytes = "1"
+http = "1"
+uuid = { version = "1", features = ["v4"] }
+
+# optional reference providers
+reqwest = { version = "0.12", default-features = false, features = ["stream", "json", "rustls-tls"] }
+async-stream = "0.3"
+claude-wrapper = "=0.5.1"

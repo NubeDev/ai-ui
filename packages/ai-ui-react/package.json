@@ -1,0 +1,27 @@
+{
+  "name": "@nube/ai-ui-react",
+  "version": "0.1.0",
+  "description": "Thin wrapper around @openuidev/react-ui pre-wired to the ai-ui Rust server. Stock OpenUI component library.",
+  "license": "MIT OR Apache-2.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./components.css": "@openuidev/react-ui/components.css"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@openuidev/react-headless": "latest",
+    "@openuidev/react-ui": "latest",
+    "@openuidev/react-lang": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

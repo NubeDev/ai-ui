@@ -1,0 +1,38 @@
+{
+  "name": "stock-openui",
+  "preamble": "These are the stock OpenUI Lang components, rendered via @openuidev/react-ui's default genui-lib. The React side regenerates this file from src/library.ts; do not hand-edit.",
+  "components": [
+    {
+      "name": "Stack",
+      "description": "Vertical or horizontal stack of children.",
+      "props": "children: list of identifiers\ndirection: \"row\" | \"column\" (default \"column\")\ngap: \"s\" | \"m\" | \"l\"\nalign: \"start\" | \"center\" | \"end\"\npadding: \"s\" | \"m\" | \"l\"",
+      "example": "root = Stack([title, body], direction=\"column\", gap=\"m\")"
+    },
+    {
+      "name": "Card",
+      "description": "Bordered container for grouped content.",
+      "props": "children: list of identifiers\nvariant: \"default\" | \"outline\" (default \"default\")",
+      "example": "root = Card([Header])\nHeader = TextContent(\"Hello\")"
+    },
+    {
+      "name": "CardHeader",
+      "description": "Card title + optional subtitle.",
+      "props": "title: string\nsubtitle: string?"
+    },
+    {
+      "name": "TextContent",
+      "description": "Plain text block.",
+      "props": "text: string"
+    },
+    {
+      "name": "Table",
+      "description": "Tabular data; columns are Col(header, values).",
+      "props": "columns: list of Col(...)"
+    },
+    {
+      "name": "Col",
+      "description": "One column inside a Table.",
+      "props": "header: string\nvalues: list of strings or numbers"
+    }
+  ]
+}
