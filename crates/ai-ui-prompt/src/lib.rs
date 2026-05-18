@@ -76,9 +76,7 @@ impl PromptBuilder {
 
     /// Assemble the final prompt string.
     pub fn build(&self) -> String {
-        let mut out = String::with_capacity(
-            self.base.len() + self.manifest.preamble.len() + 4096,
-        );
+        let mut out = String::with_capacity(self.base.len() + self.manifest.preamble.len() + 4096);
         out.push_str(self.base.trim());
         out.push_str("\n\n");
 
@@ -184,7 +182,9 @@ pub fn load_manifest<P: AsRef<std::path::Path>>(path: P) -> Result<ComponentMani
 /// contents, or `Err` if the env-pointed file does not exist (the fallback
 /// path missing is OK — we just return the empty string).
 pub fn load_prompt_file_with_env(env_var: &str, fallback: &str) -> std::io::Result<Option<String>> {
-    let path = std::env::var(env_var).ok().unwrap_or_else(|| fallback.to_string());
+    let path = std::env::var(env_var)
+        .ok()
+        .unwrap_or_else(|| fallback.to_string());
     let p = std::path::Path::new(&path);
     if !p.exists() {
         return Ok(None);

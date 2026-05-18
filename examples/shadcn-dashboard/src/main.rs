@@ -21,15 +21,12 @@ use tower_http::{cors::CorsLayer, services::ServeDir};
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    let skills_dir = std::env::var("AI_UI_SKILLS_DIR")
-        .unwrap_or_else(|_| "../../skills".into());
+    let skills_dir = std::env::var("AI_UI_SKILLS_DIR").unwrap_or_else(|_| "../../skills".into());
     let skills = SkillRegistry::load_dir(&skills_dir)?;
     tracing::info!(count = skills.len(), dir = %skills_dir, "skills loaded");
 
     let manifest_path = std::env::var("AI_UI_COMPONENT_MANIFEST")
-        .unwrap_or_else(|_| {
-            "../../packages/ai-ui-react-shadcn/dist/components.json".into()
-        });
+        .unwrap_or_else(|_| "../../packages/ai-ui-react-shadcn/dist/components.json".into());
 
     let state = AiUiState::builder()
         .skills(skills)
@@ -58,8 +55,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 fn select_provider(
     builder: ai_ui_core::AiUiStateBuilder,
 ) -> Result<ai_ui_core::AiUiStateBuilder, Box<dyn std::error::Error>> {
-    let provider = ai_ui_core::openai::OpenAiProvider::from_env()
-        .map_err(|_| "OPENAI_API_KEY is not set")?;
+    let provider =
+        ai_ui_core::openai::OpenAiProvider::from_env().map_err(|_| "OPENAI_API_KEY is not set")?;
     tracing::info!("provider: openai-proxy");
     Ok(builder.provider(provider))
 }

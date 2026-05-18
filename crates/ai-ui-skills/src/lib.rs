@@ -102,7 +102,9 @@ impl SkillRegistry {
                 Err(e) => return Err(e),
             }
         }
-        registry.skills.sort_by(|a, b| a.manifest.name.cmp(&b.manifest.name));
+        registry
+            .skills
+            .sort_by(|a, b| a.manifest.name.cmp(&b.manifest.name));
         Ok(registry)
     }
 
@@ -133,7 +135,10 @@ impl SkillRegistry {
     }
 
     pub fn insert(&mut self, skill: Skill) -> Result<(), SkillError> {
-        if let Some(existing) = self.skills.iter().find(|s| s.manifest.name == skill.manifest.name)
+        if let Some(existing) = self
+            .skills
+            .iter()
+            .find(|s| s.manifest.name == skill.manifest.name)
         {
             return Err(SkillError::DuplicateName {
                 name: skill.manifest.name.clone(),
@@ -191,7 +196,9 @@ fn collect_md(dir: &Path, out: &mut Vec<PathBuf>) -> std::io::Result<()> {
 fn split_frontmatter(raw: &str) -> Option<(&str, &str)> {
     let raw = raw.strip_prefix('\u{FEFF}').unwrap_or(raw); // BOM
     let rest = raw.strip_prefix("---")?;
-    let rest = rest.strip_prefix('\n').or_else(|| rest.strip_prefix("\r\n"))?;
+    let rest = rest
+        .strip_prefix('\n')
+        .or_else(|| rest.strip_prefix("\r\n"))?;
     // Find the closing fence at the start of a line.
     let mut idx = 0;
     for line in rest.split_inclusive('\n') {

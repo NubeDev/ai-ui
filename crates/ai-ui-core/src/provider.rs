@@ -64,9 +64,5 @@ pub trait Provider: Send + Sync + 'static {
     ///   for its API (a `role: system` message, a CLI flag, etc.).
     /// - Emitting OpenAI-compatible streaming JSON chunks.
     /// - Emitting a final `[DONE]` chunk via [`SseChunk::done`].
-    fn stream_chat(
-        &self,
-        ctx: ProviderContext,
-        messages: Vec<ChatMessage>,
-    ) -> ChatStream;
+    fn stream_chat(&self, ctx: ProviderContext, messages: Vec<ChatMessage>) -> ChatStream;
 }

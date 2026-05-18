@@ -23,7 +23,11 @@ struct OpenAiInner {
 }
 
 impl OpenAiProvider {
-    pub fn new(api_key: impl Into<String>, base_url: impl Into<String>, model: impl Into<String>) -> Self {
+    pub fn new(
+        api_key: impl Into<String>,
+        base_url: impl Into<String>,
+        model: impl Into<String>,
+    ) -> Self {
         Self {
             inner: Arc::new(OpenAiInner {
                 http: reqwest::Client::new(),
@@ -39,8 +43,8 @@ impl OpenAiProvider {
     /// `gpt-4o-mini`).
     pub fn from_env() -> Result<Self, std::env::VarError> {
         let api_key = std::env::var("OPENAI_API_KEY")?;
-        let base_url = std::env::var("OPENAI_BASE_URL")
-            .unwrap_or_else(|_| "https://api.openai.com/v1".into());
+        let base_url =
+            std::env::var("OPENAI_BASE_URL").unwrap_or_else(|_| "https://api.openai.com/v1".into());
         let model = std::env::var("OPENAI_MODEL").unwrap_or_else(|_| "gpt-4o-mini".into());
         Ok(Self::new(api_key, base_url, model))
     }

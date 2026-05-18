@@ -24,7 +24,9 @@ struct ClaudeCliInner {
 impl ClaudeCliProvider {
     pub fn new<P: Into<PathBuf>>(binary: P) -> Self {
         Self {
-            inner: Arc::new(ClaudeCliInner { binary: binary.into() }),
+            inner: Arc::new(ClaudeCliInner {
+                binary: binary.into(),
+            }),
         }
     }
 

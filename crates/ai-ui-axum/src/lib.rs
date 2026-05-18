@@ -16,13 +16,16 @@ use std::convert::Infallible;
 use std::time::Duration;
 
 use axum::{
-    Json, Router,
     extract::State,
     http::StatusCode,
-    response::{IntoResponse, Response, sse::{Event, KeepAlive, Sse}},
+    response::{
+        sse::{Event, KeepAlive, Sse},
+        IntoResponse, Response,
+    },
     routing::{get, post},
+    Json, Router,
 };
-use futures::{StreamExt, stream};
+use futures::{stream, StreamExt};
 use serde_json::json;
 use tokio_stream::wrappers::BroadcastStream;
 
@@ -147,10 +150,9 @@ async fn events_handler(
             let data = serde_json::to_string(&event).unwrap_or_else(|_| "{}".into());
             Ok::<_, Infallible>(Event::default().event("push").data(data))
         });
-    let stream = stream::once(async {
-        Ok::<_, Infallible>(Event::default().event("ready").data("{}"))
-    })
-    .chain(stream);
+    let stream =
+        stream::once(async { Ok::<_, Infallible>(Event::default().event("ready").data("{}")) })
+            .chain(stream);
     Sse::new(stream).keep_alive(
         KeepAlive::new()
             .interval(Duration::from_secs(15))

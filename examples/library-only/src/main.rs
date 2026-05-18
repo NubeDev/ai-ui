@@ -15,7 +15,7 @@
 
 use std::path::Path;
 
-use ai_ui_prompt::{PromptBuilder, load_manifest};
+use ai_ui_prompt::{load_manifest, PromptBuilder};
 use ai_ui_skills::SkillRegistry;
 
 #[cfg(any(feature = "openai-proxy", feature = "claude-cli"))]
@@ -36,7 +36,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 2. Load the shadcn component manifest from the package's dist/.
     let manifest_path = Path::new("packages/ai-ui-react-shadcn/dist/components.json");
     let manifest = load_manifest(manifest_path)?;
-    eprintln!("[manifest] loaded {} component(s)", manifest.components.len());
+    eprintln!(
+        "[manifest] loaded {} component(s)",
+        manifest.components.len()
+    );
 
     // 3. Assemble the system prompt — pure string operation, no I/O.
     let prompt = PromptBuilder::new()
@@ -57,15 +60,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 #[cfg(feature = "openai-proxy")]
 async fn stream_one_turn(prompt: String) -> Result<(), Box<dyn std::error::Error>> {
-    let provider = ai_ui_core::openai::OpenAiProvider::from_env()
-        .map_err(|_| "OPENAI_API_KEY is not set")?;
+    let provider =
+        ai_ui_core::openai::OpenAiProvider::from_env().map_err(|_| "OPENAI_API_KEY is not set")?;
     drive(provider, prompt).await
 }
 
 #[cfg(all(feature = "claude-cli", not(feature = "openai-proxy")))]
 async fn stream_one_turn(prompt: String) -> Result<(), Box<dyn std::error::Error>> {
-    let provider = ai_ui_core::claude_cli::ClaudeCliProvider::from_env()
-        .ok_or("no `claude` binary found")?;
+    let provider =
+        ai_ui_core::claude_cli::ClaudeCliProvider::from_env().ok_or("no `claude` binary found")?;
     drive(provider, prompt).await
 }
 
