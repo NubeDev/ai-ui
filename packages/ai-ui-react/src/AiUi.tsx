@@ -1,7 +1,7 @@
 import "@openuidev/react-ui/components.css";
 import { openAIAdapter, openAIMessageFormat } from "@openuidev/react-headless";
 import { FullScreen } from "@openuidev/react-ui";
-import { openuiChatLibrary } from "@openuidev/react-ui/genui-lib";
+import { openuiLibrary } from "@openuidev/react-ui/genui-lib";
 import type { ReactNode } from "react";
 
 /**
@@ -33,7 +33,7 @@ export interface AiUiProps {
 export function AiUi({
   endpoint = "/api/chat",
   agentName = "AI",
-  componentLibrary = openuiChatLibrary,
+  componentLibrary = openuiLibrary,
   conversationStarters,
   skills,
   className = "h-screen w-screen overflow-hidden relative",

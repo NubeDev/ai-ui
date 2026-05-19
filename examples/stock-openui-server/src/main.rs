@@ -30,13 +30,38 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut builder = AiUiState::builder().skills(skills);
 
+    // Prefer the React-generated, parser-correct system prompt over the
+    // Rust-side prompt assembler. The CLI in @nube/ai-ui-react writes this
+    // file as part of `pnpm build` / `pnpm dev`.
+    //
+    // Explicit override (env var set) → hard error if the file is missing;
+    // a misconfigured path should not silently downgrade to fallback.
+    // Implicit default (env var unset) → warn-and-continue is fine because
+    // the default path may legitimately not exist yet (fresh checkout, no
+    // `pnpm build` run).
+    let (lib_prompt_path, explicit) = match std::env::var("AI_UI_LIBRARY_PROMPT") {
+        Ok(p) => (p, true),
+        Err(_) => ("ui/src/generated/components-prompt.txt".into(), false),
+    };
+    if std::path::Path::new(&lib_prompt_path).exists() {
+        builder = builder.library_prompt_file(PathBuf::from(&lib_prompt_path));
+        tracing::info!(path = %lib_prompt_path, "library prompt loaded");
+    } else if explicit {
+        return Err(format!(
+            "AI_UI_LIBRARY_PROMPT is set to {lib_prompt_path:?} but no such file exists"
+        )
+        .into());
+    } else {
+        tracing::warn!(path = %lib_prompt_path, "no library prompt found; falling back to component manifest rendering");
+    }
+
     let manifest_path = std::env::var("AI_UI_COMPONENT_MANIFEST")
         .unwrap_or_else(|_| "ui/src/generated/components.json".into());
     if std::path::Path::new(&manifest_path).exists() {
         builder = builder.component_manifest_file(PathBuf::from(&manifest_path));
         tracing::info!(path = %manifest_path, "component manifest loaded");
     } else {
-        tracing::warn!(path = %manifest_path, "no component manifest found; serving without component knowledge");
+        tracing::warn!(path = %manifest_path, "no component manifest found");
     }
 
     let builder = select_provider(builder)?;

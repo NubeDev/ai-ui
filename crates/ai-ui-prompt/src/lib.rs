@@ -27,6 +27,12 @@ pub const OPENUI_BASE: &str = include_str!("openui-base.txt");
 pub struct PromptBuilder {
     base: String,
     manifest: ComponentManifest,
+    /// Pre-rendered library prompt produced by OpenUI's own `library.prompt()`.
+    /// When set, this replaces the base + manifest sections entirely — it is
+    /// the canonical, parser-correct description and is preferred over the
+    /// Rust-side per-component rendering, which is kept only for legacy
+    /// consumers without a JS build step.
+    library_prompt: Option<String>,
     skills: Vec<Skill>,
 }
 
@@ -35,6 +41,7 @@ impl Default for PromptBuilder {
         Self {
             base: OPENUI_BASE.to_string(),
             manifest: ComponentManifest::default(),
+            library_prompt: None,
             skills: Vec::new(),
         }
     }
@@ -52,9 +59,24 @@ impl PromptBuilder {
     }
 
     /// Set the component manifest (typically loaded from the React side's
-    /// generated `components.json`).
+    /// generated `components.json`). Used only when no [`library_prompt`] has
+    /// been provided.
     pub fn components(mut self, manifest: ComponentManifest) -> Self {
         self.manifest = manifest;
+        self
+    }
+
+    /// Splice OpenUI's own canonical system prompt (the output of
+    /// `library.prompt({...})` on the React side) verbatim. When set, this
+    /// **replaces** the base preamble and the per-component manifest
+    /// rendering — those duplicate OpenUI's own work and can drift from the
+    /// installed parser.
+    ///
+    /// Use the bundled `generate-ai-ui-prompt` CLI from `@nube/ai-ui-react` to
+    /// produce this file at build time, then point the server at it via env
+    /// (`AI_UI_LIBRARY_PROMPT`) or by calling this method directly.
+    pub fn library_prompt(mut self, text: impl Into<String>) -> Self {
+        self.library_prompt = Some(text.into());
         self
     }
 
@@ -76,20 +98,29 @@ impl PromptBuilder {
 
     /// Assemble the final prompt string.
     pub fn build(&self) -> String {
-        let mut out = String::with_capacity(self.base.len() + self.manifest.preamble.len() + 4096);
-        out.push_str(self.base.trim());
-        out.push_str("\n\n");
+        let mut out = String::with_capacity(20 * 1024);
 
-        out.push_str("# COMPONENTS\n\n");
-        if !self.manifest.preamble.trim().is_empty() {
-            out.push_str(self.manifest.preamble.trim());
-            out.push_str("\n\n");
-        }
-        if self.manifest.components.is_empty() {
-            out.push_str("(No components registered. The host has not generated a component manifest yet.)\n");
+        if let Some(lib) = &self.library_prompt {
+            // Library-rendered prompt is the source of truth. It already
+            // contains the syntax preamble, every component signature, and
+            // streaming/output rules — emit it verbatim.
+            out.push_str(lib.trim_end());
+            out.push_str("\n");
         } else {
-            for c in &self.manifest.components {
-                render_component(&mut out, c);
+            out.push_str(self.base.trim());
+            out.push_str("\n\n");
+
+            out.push_str("# COMPONENTS\n\n");
+            if !self.manifest.preamble.trim().is_empty() {
+                out.push_str(self.manifest.preamble.trim());
+                out.push_str("\n\n");
+            }
+            if self.manifest.components.is_empty() {
+                out.push_str("(No components registered. The host has not generated a component manifest yet.)\n");
+            } else {
+                for c in &self.manifest.components {
+                    render_component(&mut out, c);
+                }
             }
         }
 

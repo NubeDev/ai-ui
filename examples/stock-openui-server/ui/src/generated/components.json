@@ -1,38 +1,276 @@
 {
-  "name": "stock-openui",
-  "preamble": "These are the stock OpenUI Lang components, rendered via @openuidev/react-ui's default genui-lib. The React side regenerates this file from src/library.ts; do not hand-edit.",
+  "name": "openui",
+  "preamble": "Library: openui. Root component: Stack. The full, parser-correct component signatures and rules are spliced separately into the system prompt by ai-ui-prompt.",
   "components": [
     {
-      "name": "Stack",
-      "description": "Vertical or horizontal stack of children.",
-      "props": "children: list of identifiers\ndirection: \"row\" | \"column\" (default \"column\")\ngap: \"s\" | \"m\" | \"l\"\nalign: \"start\" | \"center\" | \"end\"\npadding: \"s\" | \"m\" | \"l\"",
-      "example": "root = Stack([title, body], direction=\"column\", gap=\"m\")"
-    },
-    {
       "name": "Card",
-      "description": "Bordered container for grouped content.",
-      "props": "children: list of identifiers\nvariant: \"default\" | \"outline\" (default \"default\")",
-      "example": "root = Card([Header])\nHeader = TextContent(\"Hello\")"
+      "description": "Styled container. variant: \"card\" (default, elevated) | \"sunk\" (recessed) | \"clear\" (transparent). Always full width. Accepts all Stack flex params (default: direction \"column\"). Cards flex to share space in row/wrap layouts.",
+      "props": ""
     },
     {
       "name": "CardHeader",
-      "description": "Card title + optional subtitle.",
-      "props": "title: string\nsubtitle: string?"
+      "description": "Header with optional title and subtitle",
+      "props": ""
     },
     {
       "name": "TextContent",
-      "description": "Plain text block.",
-      "props": "text: string"
+      "description": "Text block. Supports markdown. Optional size: \"small\" | \"default\" | \"large\" | \"small-heavy\" | \"large-heavy\".",
+      "props": ""
+    },
+    {
+      "name": "MarkDownRenderer",
+      "description": "Renders markdown text with optional container variant",
+      "props": ""
+    },
+    {
+      "name": "Callout",
+      "description": "Callout banner. Optional visible is a reactive $boolean — auto-dismisses after 3s by setting $visible to false.",
+      "props": ""
+    },
+    {
+      "name": "TextCallout",
+      "description": "Text callout with variant, title, and description",
+      "props": ""
+    },
+    {
+      "name": "Image",
+      "description": "Image with alt text and optional URL",
+      "props": ""
+    },
+    {
+      "name": "ImageBlock",
+      "description": "Image block with loading state",
+      "props": ""
+    },
+    {
+      "name": "ImageGallery",
+      "description": "Gallery grid of images with modal preview",
+      "props": ""
+    },
+    {
+      "name": "CodeBlock",
+      "description": "Syntax-highlighted code block",
+      "props": ""
     },
     {
       "name": "Table",
-      "description": "Tabular data; columns are Col(header, values).",
-      "props": "columns: list of Col(...)"
+      "description": "Data table — column-oriented. Each Col holds its own data array.",
+      "props": ""
     },
     {
       "name": "Col",
-      "description": "One column inside a Table.",
-      "props": "header: string\nvalues: list of strings or numbers"
+      "description": "Column definition — holds label + data array",
+      "props": ""
+    },
+    {
+      "name": "BarChart",
+      "description": "Vertical bars; use for comparing values across categories with one or more series",
+      "props": ""
+    },
+    {
+      "name": "LineChart",
+      "description": "Lines over categories; use for trends and continuous data over time",
+      "props": ""
+    },
+    {
+      "name": "AreaChart",
+      "description": "Filled area under lines; use for cumulative totals or volume trends over time",
+      "props": ""
+    },
+    {
+      "name": "RadarChart",
+      "description": "Spider/web chart; use for comparing multiple variables across one or more entities",
+      "props": ""
+    },
+    {
+      "name": "HorizontalBarChart",
+      "description": "Horizontal bars; prefer when category labels are long or for ranked lists",
+      "props": ""
+    },
+    {
+      "name": "Series",
+      "description": "One data series",
+      "props": ""
+    },
+    {
+      "name": "PieChart",
+      "description": "Circular slices; use plucked arrays: PieChart(data.categories, data.values)",
+      "props": ""
+    },
+    {
+      "name": "RadialChart",
+      "description": "Radial bars; use plucked arrays: RadialChart(data.categories, data.values)",
+      "props": ""
+    },
+    {
+      "name": "SingleStackedBarChart",
+      "description": "Single horizontal stacked bar; use plucked arrays: SingleStackedBarChart(data.categories, data.values)",
+      "props": ""
+    },
+    {
+      "name": "Slice",
+      "description": "One slice with label and numeric value",
+      "props": ""
+    },
+    {
+      "name": "ScatterChart",
+      "description": "X/Y scatter plot; use for correlations, distributions, and clustering",
+      "props": ""
+    },
+    {
+      "name": "ScatterSeries",
+      "description": "Named dataset",
+      "props": ""
+    },
+    {
+      "name": "Point",
+      "description": "Data point with numeric coordinates",
+      "props": ""
+    },
+    {
+      "name": "Form",
+      "description": "Form container with fields and explicit action buttons",
+      "props": ""
+    },
+    {
+      "name": "FormControl",
+      "description": "Field with label, input component, and optional hint text",
+      "props": ""
+    },
+    {
+      "name": "Label",
+      "description": "Text label",
+      "props": ""
+    },
+    {
+      "name": "Input",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "TextArea",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "Select",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "SelectItem",
+      "description": "Option for Select",
+      "props": ""
+    },
+    {
+      "name": "DatePicker",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "Slider",
+      "description": "Numeric slider input; supports continuous and discrete (stepped) variants",
+      "props": ""
+    },
+    {
+      "name": "CheckBoxGroup",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "CheckBoxItem",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "RadioGroup",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "RadioItem",
+      "description": "",
+      "props": ""
+    },
+    {
+      "name": "SwitchGroup",
+      "description": "Group of switch toggles",
+      "props": ""
+    },
+    {
+      "name": "SwitchItem",
+      "description": "Individual switch toggle",
+      "props": ""
+    },
+    {
+      "name": "Button",
+      "description": "Clickable button",
+      "props": ""
+    },
+    {
+      "name": "Buttons",
+      "description": "Group of Button components. direction: \"row\" (default) | \"column\".",
+      "props": ""
+    },
+    {
+      "name": "Stack",
+      "description": "Flex container. direction: \"row\"|\"column\" (default \"column\"). gap: \"none\"|\"xs\"|\"s\"|\"m\"|\"l\"|\"xl\"|\"2xl\" (default \"m\"). align: \"start\"|\"center\"|\"end\"|\"stretch\"|\"baseline\". justify: \"start\"|\"center\"|\"end\"|\"between\"|\"around\"|\"evenly\".",
+      "props": ""
+    },
+    {
+      "name": "Tabs",
+      "description": "Tabbed container",
+      "props": ""
+    },
+    {
+      "name": "TabItem",
+      "description": "value is unique id, trigger is tab label, content is array of components",
+      "props": ""
+    },
+    {
+      "name": "Accordion",
+      "description": "Collapsible sections",
+      "props": ""
+    },
+    {
+      "name": "AccordionItem",
+      "description": "value is unique id, trigger is section title",
+      "props": ""
+    },
+    {
+      "name": "Steps",
+      "description": "Step-by-step guide",
+      "props": ""
+    },
+    {
+      "name": "StepsItem",
+      "description": "title and details text for one step",
+      "props": ""
+    },
+    {
+      "name": "Carousel",
+      "description": "Horizontal scrollable carousel",
+      "props": ""
+    },
+    {
+      "name": "Separator",
+      "description": "Visual divider between content sections",
+      "props": ""
+    },
+    {
+      "name": "TagBlock",
+      "description": "tags is an array of strings",
+      "props": ""
+    },
+    {
+      "name": "Tag",
+      "description": "Styled tag/badge with optional icon and variant",
+      "props": ""
+    },
+    {
+      "name": "Modal",
+      "description": "Modal dialog. open is a reactive $boolean binding — set to true to open, X/Escape/backdrop auto-closes. Put Form with buttons inside children.",
+      "props": ""
     }
   ]
 }

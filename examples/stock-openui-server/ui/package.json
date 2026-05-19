@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "generate:prompt": "npx @openuidev/cli@latest generate src/library.ts --out src/generated/system-prompt.txt",
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "generate:prompt": "generate-ai-ui-prompt --library openui --out src/generated/components-prompt.txt --json-out src/generated/components.json",
+    "dev": "pnpm run generate:prompt && vite",
+    "build": "pnpm run generate:prompt && tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

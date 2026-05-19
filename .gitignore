@@ -8,8 +8,10 @@ Cargo.lock.bak
 # without running the generator.
 **/generated/system-prompt.txt
 **/generated/components.json
+**/generated/components-prompt.txt
 !examples/**/generated/system-prompt.txt
 !examples/**/generated/components.json
+!examples/**/generated/components-prompt.txt
 !packages/ai-ui-react-shadcn/dist/components.json
 
 # Logs

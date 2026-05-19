@@ -66,8 +66,12 @@ async fn chat_handler(
     let prompt = if payload.skills.is_empty() {
         state.prompt().build()
     } else {
-        ai_ui_prompt::PromptBuilder::new()
-            .components(state.manifest().clone())
+        // Per-request skills subset: start from the configured builder so the
+        // library prompt / base / manifest settings are preserved, then swap
+        // in just the requested skills.
+        state
+            .prompt()
+            .clone()
             .skills_subset(state.skills(), &payload.skills)
             .build()
     };
